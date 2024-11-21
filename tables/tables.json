@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "status": "cancelling",
+    "items": [
+      "hamburguer",
+      "coffe"
+    ],
+    "cancelling": false
+  },
+  {
+    "id": 2,
+    "status": "free",
+    "items": [],
+    "cancelling": false
+  },
+  {
+    "id": 3,
+    "status": "free",
+    "items": [],
+    "cancelling": false
+  },
+  {
+    "id": 4,
+    "status": "free",
+    "items": [],
+    "cancelling": false
+  },
+  {
+    "id": 5,
+    "status": "free",
+    "items": [],
+    "cancelling": false
+  }
+]

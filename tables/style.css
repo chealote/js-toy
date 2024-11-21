@@ -1,0 +1,49 @@
+body {
+    text-align: center;
+}
+
+.layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px;
+}
+
+.table {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+
+.table.free {
+    background: #d4edda;
+}
+
+.table.occupied {
+    background: #f8d7da;
+}
+
+.details {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  display: inline-block;
+  text-align: left;
+  background: #fff;
+}
+
+.error {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 20px;
+    background: #f8d7da;
+    color: red;
+}
