@@ -9,11 +9,17 @@
   </head>
   <body>
     <h1>Tables!</h1>
-    <input type="text" id="ntables" onkeypress="updateTables(event)" value="" />
+    <div id="tables-amount">
+      <button onclick="removeTable()">-</button>
+      <button onclick="addTable()">+</button>
+    </div>
     <div class="error" id="error"></div>
     <div id="layout" class="layout">
     </div>
     <div class="details" id="details"></div>
+    <div>
+      <a href="items.html">items!</a>
+    </div>
   </body>
   <script src="script.js"></script>
 </html>

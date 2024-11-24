@@ -31,12 +31,12 @@ body {
 }
 
 .details {
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  display: inline-block;
-  text-align: left;
-  background: #fff;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    text-align: left;
+    background: #fff;
 }
 
 .error {
@@ -46,4 +46,9 @@ body {
     padding: 20px;
     background: #f8d7da;
     color: red;
+}
+
+#tables-amount button {
+    width: 100px;
+    font-size: 20px;
 }

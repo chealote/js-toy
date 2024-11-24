@@ -10,7 +10,6 @@ const DEFAULT_TABLE = {
   id: 0,
   status: TABLE_STATUS.FREE,
   items: [],
-  cancelling: false,
 };
 
 async function fetchItems() {
@@ -25,6 +24,28 @@ async function fetchCurrentTables() {
   return tables;
 }
 
+async function addTable() {
+  const tables = await fetchCurrentTables();
+  const nextTable = DEFAULT_TABLE;
+  nextTable.id = tables.reduce((maxId, table) => {
+    if (table.id > maxId) {
+      return table.id;
+    }
+    return maxId;
+  }, tables[0].id);
+  nextTable.id += 1;
+  tables.push(nextTable);
+  await updateCurrentTables(tables);
+  renderTables();
+}
+
+async function removeTable() {
+  let tables = await fetchCurrentTables();
+  tables = tables.slice(0, tables.length-1);
+  await updateCurrentTables(tables);
+  renderTables();
+}
+
 async function updateCurrentTables(tables) {
   await fetch(`${SERVER_URL}/tables`, {
     method: "POST",
@@ -35,41 +56,25 @@ async function updateCurrentTables(tables) {
   });
 }
 
-async function prepareTables(ntables) {
-  let tables = await fetchCurrentTables();
-  if (ntables < tables.length) {
-    tables = tables.slice(0, ntables);
-  } else {
-    for (let i=0; i<ntables; i++) {
-      if (tables[i]) {
-        continue;
-      }
+// async function prepareTables(ntables) {
+//   let tables = await fetchCurrentTables();
+//   if (ntables < tables.length) {
+//     tables = tables.slice(0, ntables);
+//   } else {
+//     for (let i=0; i<ntables; i++) {
+//       if (tables[i]) {
+//         continue;
+//       }
 
-      const defaultTable = structuredClone(DEFAULT_TABLE);
-      defaultTable.id = i+1;
-      tables.push(defaultTable);
-    }
-  }
+//       const defaultTable = structuredClone(DEFAULT_TABLE);
+//       defaultTable.id = i+1;
+//       tables.push(defaultTable);
+//     }
+//   }
 
-  await updateCurrentTables(tables);
-  renderTables();
-}
-
-function updateTables(event) {
-  event.preventDefault();
-
-  const ntablesInput = document.getElementById("ntables");
-  if (event.key === "Enter") {
-    prepareTables(Number(ntablesInput.value));
-  }
-
-  const reOnlyNumbers = /^[0-9]+$/;
-  if (! event.key.match(reOnlyNumbers)) {
-    return;
-  }
-
-  ntablesInput.value += event.key;
-}
+//   await updateCurrentTables(tables);
+//   renderTables();
+// }
 
 async function renderTables() {
   const tables = await fetchCurrentTables();
@@ -102,11 +107,11 @@ async function toggleItemTable(tableId, item, itemPrice) {
   const table = tables.filter(t => t.id === tableId)[0];
   if (table.items.indexOf(item) >= 0) {
     table.items.splice(table.items.indexOf(item), 1);
-    const total = Number(price.value) - itemPrice;
+    const total = Number(price.value) - Number(itemPrice);
     price.value = total;
   } else {
     table.items.push(item);
-    const total = Number(price.value) + itemPrice;
+    const total = Number(price.value) + Number(itemPrice);
     price.value = total;
   }
   await updateCurrentTables(tables);
@@ -118,7 +123,6 @@ async function freeTable(tableId) {
   const table = tables.filter(t => t.id === tableId)[0];
   table.status = TABLE_STATUS.FREE;
   table.items = [];
-  table.cancelling = false;
   await updateCurrentTables(tables);
   renderTables();
   renderDetails(tableId);
@@ -159,7 +163,7 @@ async function renderItemsInDetails(table) {
   }
 
   const totalPrice = items.filter(i => i.checked).reduce((acc, i) => {
-    return acc + i.price;
+    return acc + Number(i.price);
   }, 0);
 
   const tl = document.createElement("label");
@@ -172,15 +176,6 @@ async function renderItemsInDetails(table) {
   t.value = totalPrice;
   detailsDiv.appendChild(tl);
   detailsDiv.appendChild(t);
-}
-
-async function getTotalPriceOfItems(itemNames) {
-  const items = await fetchItems();
-  return itemNames.reduce((acc, item) => {
-    const price = items.filter(i => i.name === item)[0].price;
-    acc += price;
-    return acc;
-  }, 0);
 }
 
 async function renderDetailsIfCancelling(table) {
